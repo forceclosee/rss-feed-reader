@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { AccountPage } from "@/pages/account-page";
+import { AccountPage } from "#/pages/account-page";
 import { renderWithRouter } from "./render-with-router";
 
 describe("AccountPage", () => {

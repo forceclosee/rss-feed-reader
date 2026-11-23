@@ -1,7 +1,7 @@
 import { Link, type LinkProps } from "@tanstack/react-router";
 import { Button } from "@ui-sdk/react/button";
 import type { ReactNode } from "react";
-import { cx } from "@/lib/cx";
+import { cx } from "#/lib/cx";
 import { type ButtonVariant, buttonBaseClasses, buttonVariantClasses } from "./button-styles";
 
 type ButtonLinkProps = {

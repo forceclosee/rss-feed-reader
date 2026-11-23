@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createDatabase, getDatabase } from "@/db/client.server";
+import { createDatabase, getDatabase } from "#/db/client.server";
 
 describe("database client", () => {
 	afterEach(() => {

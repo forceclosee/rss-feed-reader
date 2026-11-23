@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ReaderPage } from "@/pages/reader-page";
+import { ReaderPage } from "#/pages/reader-page";
 
 export const Route = createFileRoute("/reader")({
 	head: () => ({

@@ -19,7 +19,7 @@
 		"verbatimModuleSyntax": false,
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"#/*": ["./src/*"]
 		},
 		"types": ["node", "vite/client"]
 	},

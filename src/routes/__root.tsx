@@ -1,8 +1,8 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { AppShell } from "@/components/app-shell";
-import { ButtonLink } from "@/components/button-link";
-import { site } from "@/lib/site";
+import { AppShell } from "#/components/app-shell";
+import { ButtonLink } from "#/components/button-link";
+import { site } from "#/lib/site";
 import appCss from "../styles/global.css?url";
 
 export const Route = createRootRoute({

@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ButtonLink } from "@/components/button-link";
+import { ButtonLink } from "#/components/button-link";
 import { renderWithRouter } from "./render-with-router";
 
 describe("ButtonLink", () => {

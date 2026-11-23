@@ -1,7 +1,7 @@
 import { Button } from "@ui-sdk/react/button";
-import { ButtonLink } from "@/components/button-link";
-import { buttonBaseClasses, buttonVariantClasses } from "@/components/button-styles";
-import { cx } from "@/lib/cx";
+import { ButtonLink } from "#/components/button-link";
+import { buttonBaseClasses, buttonVariantClasses } from "#/components/button-styles";
+import { cx } from "#/lib/cx";
 
 const details = [
 	{ label: "Display name", value: "Guest" },

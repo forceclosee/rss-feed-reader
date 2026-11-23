@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Rss } from "lucide-react";
 import type { ReactNode } from "react";
-import { cx } from "@/lib/cx";
-import { site } from "@/lib/site";
+import { cx } from "#/lib/cx";
+import { site } from "#/lib/site";
 
 const navigation = [
 	{ to: "/reader", label: "Reader" },

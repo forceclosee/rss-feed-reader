@@ -1,7 +1,7 @@
 import { Bookmark, Layers, Rss } from "lucide-react";
 import type { ReactNode } from "react";
-import { ButtonLink } from "@/components/button-link";
-import { site } from "@/lib/site";
+import { ButtonLink } from "#/components/button-link";
+import { site } from "#/lib/site";
 
 type Feature = {
 	title: string;
