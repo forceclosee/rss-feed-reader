@@ -1,0 +1,129 @@
+@layer ui-sdk;
+
+@import "tailwindcss";
+@import "./tokens.css";
+@import "@ui-sdk/core/web.css" layer(components);
+
+:root {
+	color-scheme: light dark;
+
+	&[data-theme="light"] {
+		color-scheme: light;
+	}
+
+	&[data-theme="dark"] {
+		color-scheme: dark;
+	}
+}
+
+@theme {
+	/* font */
+	--font-sans: "Inter", system-ui, -apple-system, sans-serif;
+	--font-serif: "Georgia", "Charter", serif;
+	--font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+
+	--text-xs: 0.6875rem;
+	--text-xs--line-height: 1.45;
+	--text-sm: 0.8125rem;
+	--text-sm--line-height: 1.45;
+	--text-base: 1rem;
+	--text-base--line-height: 1.55;
+	--text-lg: 1.25rem;
+	--text-lg--line-height: 1.4;
+	--text-xl: 1.5625rem;
+	--text-xl--line-height: 1.3;
+	--text-2xl: 1.9375rem;
+	--text-2xl--line-height: 1.25;
+	--text-3xl: 2.4375rem;
+	--text-3xl--line-height: 1.2;
+
+	--font-weight-regular: var(--font-regular);
+	--font-weight-medium: var(--font-medium);
+	--font-weight-semibold: var(--font-semibold);
+	--font-weight-bold: var(--font-bold);
+
+	/* color */
+	--color-bg-primary: light-dark(#ffffff, #0d1117);
+	--color-bg-secondary: light-dark(#f8f9fa, #161b22);
+	--color-bg-tertiary: light-dark(#f1f3f5, #21262d);
+	--color-surface: light-dark(#ffffff, #161b22);
+	--color-border: light-dark(#e1e4e8, #30363d);
+	--color-border-subtle: light-dark(#eceef0, #21262d);
+
+	--color-text-primary: light-dark(#1a1d21, #e6edf3);
+	--color-text-secondary: light-dark(#57606a, #8b949e);
+	--color-text-tertiary: light-dark(#8b949e, #6e7681);
+
+	--color-accent: light-dark(#2563eb, #58a6ff);
+	--color-accent-hover: light-dark(#1d4ed8, #79c0ff);
+	--color-accent-subtle: light-dark(#eff6ff, #1a2332);
+
+	--color-success: light-dark(#16a34a, #3fb950);
+	--color-warning: light-dark(#ca8a04, #d29922);
+	--color-error: light-dark(#dc2626, #f85149);
+
+	--color-unread-indicator: light-dark(#2563eb, #58a6ff);
+
+	/* shadow */
+	--shadow-sm: 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
+	--shadow-md:
+		0 4px 6px -1px light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.4)),
+		0 2px 4px -2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
+	--shadow-lg:
+		0 10px 15px -3px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5)),
+		0 4px 6px -4px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.3));
+
+	/* spacing */
+	--spacing: 0.25rem;
+
+	/* border radius */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1rem;
+	--radius-full: 9999rem;
+
+	/* sizing */
+	--sidebar-width: 16.25rem;
+	--content-max-width: 45rem;
+	--feed-max-width: 60rem;
+	--page-max-width: 80rem;
+}
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	body {
+		@apply m-0 bg-bg-primary font-sans text-base text-text-primary antialiased;
+	}
+
+	h1,
+	h2,
+	h3 {
+		text-wrap: balance;
+	}
+
+	p {
+		text-wrap: pretty;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
