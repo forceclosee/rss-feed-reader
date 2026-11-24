@@ -15,8 +15,7 @@ export function ButtonLink({ to, children, variant = "primary", className }: But
 	return (
 		<Button
 			render={<Link to={to} />}
-			className={cx(buttonBaseClasses, buttonVariantClasses[variant], className)}
-		>
+			className={cx(buttonBaseClasses, buttonVariantClasses[variant], className)}>
 			{children}
 		</Button>
 	);

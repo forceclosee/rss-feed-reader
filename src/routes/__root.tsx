@@ -64,11 +64,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 function NotFound() {
 	return (
 		<div className="mx-auto w-full max-w-(--content-max-width) px-4 py-16 sm:px-6">
-			<p className="text-xs font-semibold uppercase tracking-widest text-text-secondary">404</p>
-			<h1 className="mt-1 text-xl font-semibold tracking-tight text-text-primary">
+			<p className="text-text-secondary text-xs font-semibold tracking-widest uppercase">404</p>
+			<h1 className="text-text-primary mt-1 text-xl font-semibold tracking-tight">
 				Page not found
 			</h1>
-			<p className="mt-3 text-sm text-text-secondary">
+			<p className="text-text-secondary mt-3 text-sm">
 				That route does not exist yet. Head back to the landing page to keep exploring.
 			</p>
 			<ButtonLink to="/" className="mt-6">

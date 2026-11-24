@@ -13,13 +13,13 @@ export function AccountPage() {
 	return (
 		<div className="mx-auto w-full max-w-(--page-max-width) px-4 py-10 sm:px-6 sm:py-14">
 			<div className="max-w-(--content-max-width)">
-				<p className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
+				<p className="text-text-secondary text-xs font-semibold tracking-widest uppercase">
 					Account
 				</p>
-				<h1 className="mt-1 text-xl font-semibold tracking-tight text-text-primary">
+				<h1 className="text-text-primary mt-1 text-xl font-semibold tracking-tight">
 					Account settings
 				</h1>
-				<p className="mt-3 text-sm text-text-secondary">
+				<p className="text-text-secondary mt-3 text-sm">
 					Authentication arrives in the next milestone. Until then this page shows the shape of the
 					account area: identity, preferences, and session controls.
 				</p>
@@ -27,38 +27,35 @@ export function AccountPage() {
 
 			<section
 				aria-labelledby="profile-heading"
-				className="mt-8 max-w-(--content-max-width) rounded-lg border border-border-subtle bg-surface shadow-sm"
-			>
-				<div className="flex items-center gap-4 border-b border-border-subtle px-6 py-5">
+				className="border-border-subtle bg-surface mt-8 max-w-(--content-max-width) rounded-lg border shadow-sm">
+				<div className="border-border-subtle flex items-center gap-4 border-b px-6 py-5">
 					<span
 						aria-hidden="true"
-						className="flex size-12 items-center justify-center rounded-full bg-accent-subtle text-lg font-semibold text-accent"
-					>
+						className="bg-accent-subtle text-accent flex size-12 items-center justify-center rounded-full text-lg font-semibold">
 						G
 					</span>
 					<div>
-						<h2 id="profile-heading" className="text-base font-semibold text-text-primary">
+						<h2 id="profile-heading" className="text-text-primary text-base font-semibold">
 							Guest session
 						</h2>
-						<p className="text-sm text-text-secondary">
+						<p className="text-text-secondary text-sm">
 							Your feeds and reading state are scoped to this browser session.
 						</p>
 					</div>
 				</div>
 
-				<dl className="divide-y divide-border-subtle">
+				<dl className="divide-border-subtle divide-y">
 					{details.map((detail) => (
 						<div
 							key={detail.label}
-							className="flex flex-wrap items-center justify-between gap-2 px-6 py-3"
-						>
-							<dt className="text-sm text-text-secondary">{detail.label}</dt>
-							<dd className="text-sm font-medium text-text-primary">{detail.value}</dd>
+							className="flex flex-wrap items-center justify-between gap-2 px-6 py-3">
+							<dt className="text-text-secondary text-sm">{detail.label}</dt>
+							<dd className="text-text-primary text-sm font-medium">{detail.value}</dd>
 						</div>
 					))}
 				</dl>
 
-				<div className="flex flex-wrap items-center gap-3 border-t border-border-subtle px-6 py-4">
+				<div className="border-border-subtle flex flex-wrap items-center gap-3 border-t px-6 py-4">
 					<ButtonLink to="/reader" variant="secondary">
 						Open reader
 					</ButtonLink>
@@ -69,11 +66,10 @@ export function AccountPage() {
 							buttonBaseClasses,
 							buttonVariantClasses.secondary,
 							"cursor-not-allowed opacity-60",
-						)}
-					>
+						)}>
 						Sign in
 					</Button>
-					<p id="sign-in-note" className="text-xs text-text-secondary">
+					<p id="sign-in-note" className="text-text-secondary text-xs">
 						Email and password sign-in is coming soon.
 					</p>
 				</div>
@@ -81,12 +77,11 @@ export function AccountPage() {
 
 			<section
 				aria-labelledby="preferences-heading"
-				className="mt-6 max-w-(--content-max-width) rounded-lg border border-border-subtle bg-surface p-6 shadow-sm"
-			>
-				<h2 id="preferences-heading" className="text-base font-semibold text-text-primary">
+				className="border-border-subtle bg-surface mt-6 max-w-(--content-max-width) rounded-lg border p-6 shadow-sm">
+				<h2 id="preferences-heading" className="text-text-primary text-base font-semibold">
 					Reading preferences
 				</h2>
-				<p className="mt-2 text-sm text-text-secondary">
+				<p className="text-text-secondary mt-2 text-sm">
 					Layout, theme, refresh interval, and reading typography will live here once guest state
 					and user preferences are wired.
 				</p>
