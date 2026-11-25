@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Inbox, Search, Star } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { ButtonLink } from "#/components/button-link";
 import { type ReaderItem, type ReaderStatus, sortReaderItems } from "#/feed/reader";
 import { STARTER_PACK } from "#/feed/starter-pack";
+import { cx } from "#/lib/cx";
+import { dismissSignUpPrompt, isGuestItemRead, isSignUpDismissed } from "#/lib/guest";
 
 export type { ReaderItem } from "#/feed/reader";
 
@@ -16,6 +19,7 @@ type Destination = {
 export interface ReaderPageProps {
 	items?: ReaderItem[];
 	status?: ReaderStatus;
+	isGuest?: boolean;
 }
 
 const fullDateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -36,10 +40,12 @@ const WEEK = 7 * DAY;
 const MONTH = 30 * DAY;
 const YEAR = 365 * DAY;
 
-export function ReaderPage({ items = [], status }: ReaderPageProps) {
+export function ReaderPage({ items = [], status, isGuest = false }: ReaderPageProps) {
 	const sortedItems = sortReaderItems(items);
 	const view: ReaderStatus = status ?? (sortedItems.length > 0 ? "ready" : "empty");
 	const feedCount = new Set(sortedItems.map((item) => item.feed.id)).size;
+
+	const [signUpDismissed, setSignUpDismissed] = useState(isSignUpDismissed());
 
 	const destinations: Destination[] = [
 		{
@@ -67,6 +73,15 @@ export function ReaderPage({ items = [], status }: ReaderPageProps) {
 						: "Sorted newest first"}
 				</p>
 			</header>
+
+			{isGuest && !signUpDismissed && (
+				<GuestSignUpPrompt
+					onDismiss={() => {
+						dismissSignUpPrompt();
+						setSignUpDismissed(true);
+					}}
+				/>
+			)}
 
 			<div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-10">
 				<aside aria-label="Reader sidebar" className="lg:w-(--sidebar-width) lg:shrink-0">
@@ -123,7 +138,7 @@ export function ReaderPage({ items = [], status }: ReaderPageProps) {
 						) : (
 							<ul aria-label="Items" className="divide-border-subtle divide-y">
 								{sortedItems.map((item) => (
-									<ItemRow key={item.id} item={item} />
+									<ItemRow key={item.id} item={item} isGuest={isGuest} />
 								))}
 							</ul>
 						)}
@@ -174,9 +189,32 @@ function Message({ title, body }: { title: string; body: string }) {
 	);
 }
 
-function ItemRow({ item }: { item: ReaderItem }) {
+function GuestSignUpPrompt({ onDismiss }: { onDismiss: () => void }) {
 	return (
-		<li className="flex gap-4 px-6 py-5">
+		<div className="border-border-subtle bg-bg-secondary mb-6 rounded-lg border px-4 py-3">
+			<p className="text-text-secondary text-sm">
+				Exploring as a guest. Your feeds and reading state live in this browser session and won't
+				persist after you close the tab.
+			</p>
+			<div className="mt-3 flex flex-wrap items-center gap-2">
+				<ButtonLink to="/account" variant="secondary" className="text-sm">
+					Sign up to keep them
+				</ButtonLink>
+				<button
+					type="button"
+					onClick={onDismiss}
+					className="text-text-tertiary hover:text-text-secondary text-sm underline underline-offset-4">
+					Maybe later
+				</button>
+			</div>
+		</div>
+	);
+}
+
+function ItemRow({ item, isGuest }: { item: ReaderItem; isGuest: boolean }) {
+	const isRead = isGuest && isGuestItemRead(item.id);
+	return (
+		<li className={cx("flex gap-4 px-6 py-5", isRead && "opacity-60")}>
 			<FeedIcon feed={item.feed} />
 			<div className="min-w-0 flex-1">
 				<h3 className="text-text-primary text-base leading-snug font-medium">

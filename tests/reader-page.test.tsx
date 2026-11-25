@@ -1,5 +1,6 @@
-import { screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, screen, within } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { dismissSignUpPrompt, markGuestItemRead, startGuestSession } from "#/lib/guest";
 import {
 	formatFullDate,
 	formatRelativeTime,
@@ -7,6 +8,10 @@ import {
 	ReaderPage,
 } from "#/pages/reader-page";
 import { renderWithRouter } from "./render-with-router";
+
+afterEach(() => {
+	sessionStorage.clear();
+});
 
 const items: ReaderItem[] = [
 	{
@@ -107,5 +112,92 @@ describe("ReaderPage", () => {
 		expect(formatRelativeTime("2024-02-10T11:59:30.000Z", now)).toBe("just now");
 		expect(formatRelativeTime("not a date", now)).toBe("Undated");
 		expect(formatFullDate("2024-02-02T09:00:00.000Z")).toContain("Feb 2, 2024");
+	});
+});
+
+describe("ReaderPage guest mode", () => {
+	const items: ReaderItem[] = [
+		{
+			id: "item-1",
+			title: "A guest story",
+			url: "https://example.com/guest",
+			author: "Jane Doe",
+			publishedAt: "2024-02-02T09:00:00.000Z",
+			excerpt: "The guest story excerpt.",
+			feed: {
+				id: "feed-1",
+				title: "Example Blog",
+				siteUrl: "https://example.com/",
+				iconUrl: "https://example.com/icon.png",
+			},
+		},
+		{
+			id: "item-2",
+			title: "Another guest story",
+			url: null,
+			author: null,
+			publishedAt: "2024-01-15T10:30:00.000Z",
+			excerpt: "Another guest story excerpt.",
+			feed: {
+				id: "feed-2",
+				title: "Another Source",
+				siteUrl: "https://another.example/",
+				iconUrl: null,
+			},
+		},
+	];
+
+	it("shows the five Starter Pack category groups in the sidebar", async () => {
+		startGuestSession({ items });
+		await renderWithRouter(<ReaderPage items={items} isGuest />);
+
+		expect(screen.getByRole("link", { name: /frontend/i })).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /design/i })).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /backend & devops/i })).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /general tech/i })).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /ai & ml/i })).toBeInTheDocument();
+	});
+
+	it("renders Items seeded into the guest session", async () => {
+		startGuestSession({ items });
+		await renderWithRouter(<ReaderPage items={items} isGuest />);
+
+		const list = screen.getByRole("list", { name: "Items" });
+		const rows = within(list).getAllByRole("listitem");
+		expect(rows).toHaveLength(2);
+		expect(within(rows[0] as HTMLElement).getByText("A guest story")).toBeInTheDocument();
+		expect(within(rows[1] as HTMLElement).getByText("Another guest story")).toBeInTheDocument();
+	});
+
+	it("shows a gentle, dismissible sign-up prompt instead of gating exploration", async () => {
+		startGuestSession({ items });
+		await renderWithRouter(<ReaderPage items={items} isGuest />);
+
+		expect(screen.getByText(/exploring as a guest/i)).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /sign up to keep them/i })).toHaveAttribute(
+			"href",
+			"/account",
+		);
+
+		fireEvent.click(screen.getByText(/maybe later/i));
+		expect(screen.queryByText(/exploring as a guest/i)).not.toBeInTheDocument();
+	});
+
+	it("does not show the sign-up prompt once dismissed", async () => {
+		dismissSignUpPrompt();
+		await renderWithRouter(<ReaderPage items={items} isGuest />);
+
+		expect(screen.queryByText(/exploring as a guest/i)).not.toBeInTheDocument();
+	});
+
+	it("visually de-emphasizes read items", async () => {
+		startGuestSession({ items });
+		markGuestItemRead("item-1", true);
+		await renderWithRouter(<ReaderPage items={items} isGuest />);
+
+		const list = screen.getByRole("list", { name: "Items" });
+		const rows = within(list).getAllByRole("listitem");
+		expect(rows[0]).toHaveClass("opacity-60");
+		expect(rows[1]).not.toHaveClass("opacity-60");
 	});
 });

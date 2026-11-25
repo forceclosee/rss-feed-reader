@@ -1,6 +1,8 @@
+import { useRouter } from "@tanstack/react-router";
 import { Bookmark, Layers, Rss } from "lucide-react";
 import type { ReactNode } from "react";
 import { ButtonLink } from "#/components/button-link";
+import { startGuestSession } from "#/lib/guest";
 import { site } from "#/lib/site";
 
 type Feature = {
@@ -31,6 +33,14 @@ const features: Feature[] = [
 ];
 
 export function LandingPage() {
+	const router = useRouter();
+
+	function handleTryAsGuest(event: React.MouseEvent) {
+		event.preventDefault();
+		startGuestSession();
+		router.navigate({ to: "/reader" });
+	}
+
 	return (
 		<>
 			<section className="mx-auto w-full max-w-(--page-max-width) px-4 pt-16 pb-16 sm:px-6 sm:pt-24 sm:pb-24">
@@ -45,7 +55,9 @@ export function LandingPage() {
 						{site.description}
 					</p>
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-						<ButtonLink to="/reader">Try as Guest</ButtonLink>
+						<ButtonLink to="/reader" onClick={handleTryAsGuest}>
+							Try as Guest
+						</ButtonLink>
 						<ButtonLink to="/account" variant="secondary">
 							Sign Up
 						</ButtonLink>
