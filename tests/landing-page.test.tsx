@@ -1,5 +1,5 @@
-import { screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { LandingPage } from "#/pages/landing-page";
 import { renderWithRouter } from "./render-with-router";
 
@@ -24,5 +24,19 @@ describe("LandingPage", () => {
 		expect(
 			screen.getByRole("heading", { level: 2, name: /built for people who read/i }),
 		).toBeInTheDocument();
+	});
+});
+
+describe("Try as Guest", () => {
+	it("starts a guest session in sessionStorage when trying as guest", async () => {
+		sessionStorage.clear();
+		const { router } = await renderWithRouter(<LandingPage />);
+		const navigateSpy = vi.spyOn(router, "navigate");
+
+		fireEvent.click(screen.getByRole("link", { name: /try as guest/i }));
+
+		expect(sessionStorage.getItem("frontpage:guest:active")).toBe("1");
+		expect(sessionStorage.getItem("frontpage:guest:subscriptions")).not.toBeNull();
+		expect(navigateSpy).toHaveBeenCalledWith({ to: "/reader" });
 	});
 });
