@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Partially Broken</title>
+		<link>https://partial.example/</link>
+		<item>
+			<title>Recoverable item</title>
+			<guid>partial-1</guid>
+			<description>This item is complete.</description>
+		</item>
+		<item>
+			<title>Truncated item</title>
+			<guid>partial-2</guid>
+			<description>This item is not closed
+	</channel>
+</rss>

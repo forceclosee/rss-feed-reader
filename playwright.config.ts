@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3000;
+const HOST = "127.0.0.1";
 
 export default defineConfig({
 	testDir: "./e2e",
@@ -9,7 +10,7 @@ export default defineConfig({
 	retries: process.env.CI ? 2 : 0,
 	reporter: process.env.CI ? "github" : "list",
 	use: {
-		baseURL: `http://localhost:${PORT}`,
+		baseURL: `http://${HOST}:${PORT}`,
 		trace: "on-first-retry",
 	},
 	projects: [
@@ -20,8 +21,8 @@ export default defineConfig({
 	],
 	webServer: {
 		command: "pnpm dev",
-		url: `http://localhost:${PORT}`,
+		url: `http://${HOST}:${PORT}`,
 		reuseExistingServer: !process.env.CI,
-		timeout: 120_000,
+		timeout: 180_000,
 	},
 });

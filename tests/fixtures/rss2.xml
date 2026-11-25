@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>Frontpage Test Feed &amp; Friends</title>
+		<link>https://example.com/blog/</link>
+		<description>Notes &amp; tutorials</description>
+		<image>
+			<url>https://example.com/icon.png</url>
+			<title>Frontpage Test Feed</title>
+			<link>https://example.com/blog/</link>
+		</image>
+		<item>
+			<title>Hello &mdash; World &#8217;24</title>
+			<link>https://example.com/blog/hello</link>
+			<guid isPermaLink="false">post-1</guid>
+			<pubDate>Mon, 15 Jan 2024 10:30:00 GMT</pubDate>
+			<dc:creator>Jane Doe</dc:creator>
+			<description><![CDATA[<p>A short <strong>summary</strong>.</p>]]></description>
+			<content:encoded><![CDATA[
+				<h2 onclick="alert(1)">Full article</h2>
+				<p>Hello <a href="javascript:alert(1)">bad</a> and <a href="https://example.com">good</a>.</p>
+				<script>alert('xss')</script>
+				<iframe src="https://evil.example"></iframe>
+				<form action="https://evil.example"><input name="x"></form>
+				<img src="https://example.com/pic.png" onerror="alert(1)" alt="A picture">
+				<pre><code class="language-js">const x = 1 &lt; 2;</code></pre>
+			]]></content:encoded>
+		</item>
+		<item>
+			<title>Second post</title>
+			<link>https://example.com/blog/second</link>
+			<pubDate>Tue, 16 Jan 2024 08:00:00 +0200</pubDate>
+			<description>Plain text summary with &amp; entity.</description>
+		</item>
+		<item>
+			<title>No date or link</title>
+			<description>Only a summary.</description>
+		</item>
+	</channel>
+</rss>

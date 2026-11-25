@@ -23,6 +23,7 @@
 		"cf-typegen": "wrangler types",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
+		"db:seed": "node --env-file-if-exists=.env --env-file-if-exists=.dev.vars --import tsx src/scripts/seed.ts",
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio"
 	},
@@ -33,9 +34,11 @@
 		"@ui-sdk/core": "^0.1.0-beta.13",
 		"@ui-sdk/react": "^0.1.0-beta.13",
 		"drizzle-orm": "^0.45.4",
+		"fast-xml-parser": "^5.12.1",
 		"lucide-react": "^1.77.0",
 		"react": "^19.3.1",
-		"react-dom": "^19.3.1"
+		"react-dom": "^19.3.1",
+		"sanitize-html": "^2.18.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.6.8",
@@ -47,10 +50,12 @@
 		"@types/node": "^24.10.1",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
+		"@types/sanitize-html": "^2.16.2",
 		"@vitejs/plugin-react": "^6.3.0",
 		"drizzle-kit": "^0.31.11",
 		"jsdom": "^31.0.1",
 		"tailwindcss": "^4.3.5",
+		"tsx": "^4.23.15",
 		"typescript": "^5.9.3",
 		"vite": "^8.3.8",
 		"vitest": "^5.1.1",

