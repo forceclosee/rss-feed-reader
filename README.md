@@ -15,8 +15,8 @@ This is a [Frontend Mentor](https://www.frontendmentor.io) product challenge bui
 
 ```bash
 pnpm install
-cp .env.example .env      # set DATABASE_URL to a Postgres database
-pnpm db:push             # create the feeds and items tables
+cp .env.example .env      # set DATABASE_URL and BETTER_AUTH_SECRET
+pnpm db:migrate          # create the feed cache and auth tables
 pnpm dev                 # http://127.0.0.1:3000
 ```
 
@@ -32,14 +32,14 @@ Seeding is idempotent: run it again to refresh existing Feeds and Items instead 
 
 Feed sources and Items are stored once and shared across every User (see `docs/adr/0001-shared-feed-cache.md`). The pipeline lives in `src/feed/`:
 
-| Module | Responsibility |
-| --- | --- |
-| `fetch.ts` | 10-second timeout, redirect following, conditional ETag/Last-Modified requests |
-| `parse.ts` | RSS 2.0, Atom 1.0, and RSS 1.0/RDF parsing, encodings, entities, dates |
-| `sanitize.ts` | Strips scripts, frames, forms, event handlers, and unsafe URLs at ingest |
-| `ingest.ts` | Normalizes a fetched document into safe Feed and Item values |
-| `store.ts` | Persists to the shared cache and records fetch failures |
-| `seed.ts` | Seeds the Starter Pack from `data/sample-feeds.json` |
+| Module        | Responsibility                                                                 |
+| ------------- | ------------------------------------------------------------------------------ |
+| `fetch.ts`    | 10-second timeout, redirect following, conditional ETag/Last-Modified requests |
+| `parse.ts`    | RSS 2.0, Atom 1.0, and RSS 1.0/RDF parsing, encodings, entities, dates         |
+| `sanitize.ts` | Strips scripts, frames, forms, event handlers, and unsafe URLs at ingest       |
+| `ingest.ts`   | Normalizes a fetched document into safe Feed and Item values                   |
+| `store.ts`    | Persists to the shared cache and records fetch failures                        |
+| `seed.ts`     | Seeds the Starter Pack from `data/sample-feeds.json`                           |
 
 Design choices worth knowing:
 
@@ -47,6 +47,16 @@ Design choices worth knowing:
 - **Item identity is `(feedId, guid)`.** Re-ingest updates in place, so Items never duplicate. Feeds that omit `guid`, `link`, and date get a stable generated identity that ignores summary text so edits do not mint new Items.
 - **HTML is sanitized once at ingest.** The stored `content_html`, `plain_text`, and `excerpt` are already safe to render; no sanitization runs on read.
 - **Date-only and timezone-less dates are read as UTC** so the server and browser render the same instant.
+
+## Authentication
+
+Email and password authentication runs through Better Auth with the Drizzle adapter. Sessions live in Postgres and are delivered as HTTP-only cookies by the TanStack Start cookie plugin.
+
+- `/sign-up` and `/sign-in` are public. `/account` requires a session and redirects signed-out visitors to `/sign-in?redirect=...`.
+- Unverified Users keep the full Reader. Verification will only be required to change an email address or delete an account.
+- The Better Auth handler is mounted at `/api/auth/$`. Server session helpers live in `src/lib/auth.functions.ts`, and the browser client lives in `src/lib/auth-client.ts`.
+
+Set `BETTER_AUTH_SECRET` to a long random string in every environment. Better Auth derives its base URL from the incoming request unless `BETTER_AUTH_URL` is set.
 
 ## Testing
 
@@ -66,6 +76,7 @@ docs/guidance/ brand kit, UI/UX patterns, accessibility checklist
 docs/adr/      architecture decision records
 data/          canonical Starter Pack and sample feeds
 src/feed/      feed fetching, parsing, sanitizing, and persistence
+src/lib/       auth, guest sessions, validation, and shared helpers
 src/routes/    TanStack Start routes
 tests/         Vitest and Playwright suites
 ```

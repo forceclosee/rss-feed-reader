@@ -176,7 +176,7 @@ describe("ReaderPage guest mode", () => {
 		expect(screen.getByText(/exploring as a guest/i)).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: /sign up to keep them/i })).toHaveAttribute(
 			"href",
-			"/account",
+			"/sign-up",
 		);
 
 		fireEvent.click(screen.getByText(/maybe later/i));

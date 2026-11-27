@@ -1,11 +1,10 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
-import * as schema from "./schema";
 
-export type Database = NeonHttpDatabase<typeof schema>;
+export type Database = NeonHttpDatabase;
 
 export function createDatabase(connectionString: string): Database {
-	return drizzle(neon(connectionString), { schema });
+	return drizzle({ client: neon(connectionString) });
 }
 
 let database: Database | undefined;

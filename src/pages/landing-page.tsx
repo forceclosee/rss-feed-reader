@@ -58,7 +58,7 @@ export function LandingPage() {
 						<ButtonLink to="/reader" onClick={handleTryAsGuest}>
 							Try as Guest
 						</ButtonLink>
-						<ButtonLink to="/account" variant="secondary">
+						<ButtonLink to="/sign-up" variant="secondary">
 							Sign Up
 						</ButtonLink>
 					</div>

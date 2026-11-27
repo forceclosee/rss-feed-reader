@@ -2,12 +2,14 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import type { ReactNode } from "react";
 import { AppShell } from "#/components/app-shell";
 import { ButtonLink } from "#/components/button-link";
+import { getSession } from "#/lib/auth.functions";
 import { site } from "#/lib/site";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
 import appCss from "../styles/global.css?url";
 
 export const Route = createRootRoute({
+	beforeLoad: async () => ({ authSession: await getSession() }),
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -34,9 +36,11 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+	const { authSession } = Route.useRouteContext();
+
 	return (
 		<RootDocument>
-			<AppShell>
+			<AppShell session={authSession}>
 				<Outlet />
 			</AppShell>
 		</RootDocument>

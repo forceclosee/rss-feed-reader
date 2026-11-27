@@ -14,7 +14,7 @@ describe("LandingPage", () => {
 			}),
 		).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: /try as guest/i })).toHaveAttribute("href", "/reader");
-		expect(screen.getByRole("link", { name: /sign up/i })).toHaveAttribute("href", "/account");
+		expect(screen.getByRole("link", { name: /sign up/i })).toHaveAttribute("href", "/sign-up");
 	});
 
 	it("renders three feature highlights", async () => {

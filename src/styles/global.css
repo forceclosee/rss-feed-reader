@@ -90,6 +90,14 @@
 	--page-max-width: 80rem;
 }
 
+@layer components {
+	/* ui-sdk marks required fields with data-required; show the cue visually. */
+	[data-slot="field-label"][data-required]::after {
+		content: " *";
+		color: var(--color-error);
+	}
+}
+
 @layer base {
 	*,
 	*::before,

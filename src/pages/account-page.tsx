@@ -1,15 +1,53 @@
+import { useRouter } from "@tanstack/react-router";
+import { Avatar, AvatarFallback, AvatarImage } from "@ui-sdk/react/avatar";
 import { Button } from "@ui-sdk/react/button";
+import { useState } from "react";
 import { ButtonLink } from "#/components/button-link";
 import { buttonBaseClasses, buttonVariantClasses } from "#/components/button-styles";
+import type { AuthSession } from "#/lib/auth.functions";
+import { authClient } from "#/lib/auth-client";
+import { authErrorMessage } from "#/lib/auth-errors";
 import { cx } from "#/lib/cx";
+import { firstLetter } from "#/lib/user";
 
-const details = [
-	{ label: "Display name", value: "Guest" },
-	{ label: "Email", value: "Not signed in" },
-	{ label: "Plan", value: "Free" },
-];
+interface AccountPageProps {
+	session: AuthSession;
+}
 
-export function AccountPage() {
+export function AccountPage({ session }: AccountPageProps) {
+	const router = useRouter();
+	const [isSigningOut, setIsSigningOut] = useState(false);
+	const [signOutError, setSignOutError] = useState<string | null>(null);
+	const { user } = session;
+
+	const details = [
+		{ label: "Display name", value: user.name },
+		{ label: "Email", value: user.email },
+		{ label: "Email status", value: user.emailVerified ? "Verified" : "Unverified" },
+		{ label: "Plan", value: "Free" },
+	];
+
+	async function handleSignOut() {
+		setIsSigningOut(true);
+		setSignOutError(null);
+
+		try {
+			const { error } = await authClient.signOut();
+			if (error) {
+				setSignOutError(authErrorMessage(error, "You could not be signed out. Try again."));
+				setIsSigningOut(false);
+				return;
+			}
+		} catch {
+			setSignOutError("The sign-out service could not be reached. Try again.");
+			setIsSigningOut(false);
+			return;
+		}
+
+		await router.navigate({ to: "/" });
+		await router.invalidate();
+	}
+
 	return (
 		<div className="mx-auto w-full max-w-(--page-max-width) px-4 py-10 sm:px-6 sm:py-14">
 			<div className="max-w-(--content-max-width)">
@@ -20,8 +58,7 @@ export function AccountPage() {
 					Account settings
 				</h1>
 				<p className="text-text-secondary mt-3 text-sm">
-					Authentication arrives in the next milestone. Until then this page shows the shape of the
-					account area: identity, preferences, and session controls.
+					Your identity, session controls, and reading preferences in one place.
 				</p>
 			</div>
 
@@ -29,18 +66,18 @@ export function AccountPage() {
 				aria-labelledby="profile-heading"
 				className="border-border-subtle bg-surface mt-8 max-w-(--content-max-width) rounded-lg border shadow-sm">
 				<div className="border-border-subtle flex items-center gap-4 border-b px-6 py-5">
-					<span
-						aria-hidden="true"
-						className="bg-accent-subtle text-accent flex size-12 items-center justify-center rounded-full text-lg font-semibold">
-						G
-					</span>
+					<Avatar className="size-12 text-lg font-semibold">
+						{user.image ? <AvatarImage src={user.image} alt="" /> : null}
+						<AvatarFallback>
+							<span aria-hidden="true">{firstLetter(user.name)}</span>
+							<span data-slot="visually-hidden">{user.name}</span>
+						</AvatarFallback>
+					</Avatar>
 					<div>
 						<h2 id="profile-heading" className="text-text-primary text-base font-semibold">
-							Guest session
+							{user.name}
 						</h2>
-						<p className="text-text-secondary text-sm">
-							Your feeds and reading state are scoped to this browser session.
-						</p>
+						<p className="text-text-secondary text-sm">{user.email}</p>
 					</div>
 				</div>
 
@@ -60,18 +97,20 @@ export function AccountPage() {
 						Open reader
 					</ButtonLink>
 					<Button
-						disabled
-						aria-describedby="sign-in-note"
+						onClick={() => void handleSignOut()}
+						disabled={isSigningOut}
 						className={cx(
 							buttonBaseClasses,
 							buttonVariantClasses.secondary,
-							"cursor-not-allowed opacity-60",
+							isSigningOut && "opacity-60",
 						)}>
-						Sign in
+						{isSigningOut ? "Signing out…" : "Sign out"}
 					</Button>
-					<p id="sign-in-note" className="text-text-secondary text-xs">
-						Email and password sign-in is coming soon.
-					</p>
+					{signOutError ? (
+						<p role="alert" className="text-error text-sm">
+							{signOutError}
+						</p>
+					) : null}
 				</div>
 			</section>
 

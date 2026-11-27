@@ -197,7 +197,7 @@ function GuestSignUpPrompt({ onDismiss }: { onDismiss: () => void }) {
 				persist after you close the tab.
 			</p>
 			<div className="mt-3 flex flex-wrap items-center gap-2">
-				<ButtonLink to="/account" variant="secondary" className="text-sm">
+				<ButtonLink to="/sign-up" variant="secondary" className="text-sm">
 					Sign up to keep them
 				</ButtonLink>
 				<button
