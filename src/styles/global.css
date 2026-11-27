@@ -96,6 +96,15 @@
 		content: " *";
 		color: var(--color-error);
 	}
+
+	[data-slot="toast"] [data-show] {
+		display: none;
+	}
+
+	[data-slot="toast"][data-type="success"] [data-show="success"],
+	[data-slot="toast"][data-type="error"] [data-show="error"] {
+		display: block;
+	}
 }
 
 @layer base {

@@ -1,10 +1,10 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
 import { AuthCard } from "#/components/auth-card";
 import { useAppForm } from "#/components/form";
-import { FormAlert, FormSubmit } from "#/components/form-controls";
+import { FormSubmit } from "#/components/form-controls";
 import { authClient } from "#/lib/auth-client";
 import { authErrorMessage } from "#/lib/auth-errors";
+import { toast } from "#/lib/toast";
 import { validateEmail } from "#/lib/validation";
 
 interface SignInPageProps {
@@ -13,13 +13,10 @@ interface SignInPageProps {
 
 export function SignInPage({ redirectTo }: SignInPageProps) {
 	const router = useRouter();
-	const [formError, setFormError] = useState<string | null>(null);
 
 	const form = useAppForm({
 		defaultValues: { email: "", password: "" },
 		onSubmit: async ({ value }) => {
-			setFormError(null);
-
 			try {
 				const { error } = await authClient.signIn.email({
 					email: value.email.trim(),
@@ -27,14 +24,19 @@ export function SignInPage({ redirectTo }: SignInPageProps) {
 				});
 
 				if (error) {
-					setFormError(authErrorMessage(error, "That email and password did not match."));
+					toast.error("Sign in failed", {
+						description: authErrorMessage(error, "That email and password did not match."),
+					});
 					return;
 				}
 			} catch {
-				setFormError("The sign-in service could not be reached. Try again.");
+				toast.error("Sign in failed", {
+					description: "The sign-in service could not be reached. Try again.",
+				});
 				return;
 			}
 
+			toast.success("Signed in", { description: "Welcome back to Frontpage." });
 			await router.navigate({ href: redirectTo ?? "/account" });
 			await router.invalidate();
 		},
@@ -90,8 +92,6 @@ export function SignInPage({ redirectTo }: SignInPageProps) {
 						<field.PasswordField label="Password" autoComplete="current-password" required />
 					)}
 				</form.AppField>
-
-				<FormAlert message={formError} />
 
 				<form.Subscribe selector={(state) => state.isSubmitting}>
 					{(isSubmitting) => (

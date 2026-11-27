@@ -1,10 +1,10 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
 import { AuthCard } from "#/components/auth-card";
 import { useAppForm } from "#/components/form";
-import { FormAlert, FormSubmit } from "#/components/form-controls";
+import { FormSubmit } from "#/components/form-controls";
 import { authClient } from "#/lib/auth-client";
 import { authErrorMessage } from "#/lib/auth-errors";
+import { toast } from "#/lib/toast";
 import {
 	MINIMUM_PASSWORD_LENGTH,
 	validateEmail,
@@ -18,13 +18,10 @@ interface SignUpPageProps {
 
 export function SignUpPage({ redirectTo }: SignUpPageProps) {
 	const router = useRouter();
-	const [formError, setFormError] = useState<string | null>(null);
 
 	const form = useAppForm({
 		defaultValues: { name: "", email: "", password: "" },
 		onSubmit: async ({ value }) => {
-			setFormError(null);
-
 			try {
 				const { error } = await authClient.signUp.email({
 					name: value.name.trim(),
@@ -33,14 +30,21 @@ export function SignUpPage({ redirectTo }: SignUpPageProps) {
 				});
 
 				if (error) {
-					setFormError(authErrorMessage(error, "That account could not be created."));
+					toast.error("Account not created", {
+						description: authErrorMessage(error, "That account could not be created."),
+					});
 					return;
 				}
 			} catch {
-				setFormError("The account service could not be reached. Try again.");
+				toast.error("Account not created", {
+					description: "The account service could not be reached. Try again.",
+				});
 				return;
 			}
 
+			toast.success("Account created", {
+				description: `Welcome to Frontpage, ${value.name.trim()}.`,
+			});
 			await router.navigate({ href: redirectTo ?? "/reader" });
 			await router.invalidate();
 		},
@@ -117,8 +121,6 @@ export function SignUpPage({ redirectTo }: SignUpPageProps) {
 						/>
 					)}
 				</form.AppField>
-
-				<FormAlert message={formError} />
 
 				<form.Subscribe selector={(state) => state.isSubmitting}>
 					{(isSubmitting) => (

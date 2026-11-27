@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { AppShell } from "#/components/app-shell";
+import { AppToaster } from "#/components/app-toaster";
 import { ButtonLink } from "#/components/button-link";
 import { getSession } from "#/lib/auth.functions";
 import { site } from "#/lib/site";
@@ -55,6 +56,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			</head>
 			<body>
 				{children}
+				<AppToaster />
 				<Scripts />
 			</body>
 		</html>

@@ -8,6 +8,7 @@ import type { AuthSession } from "#/lib/auth.functions";
 import { authClient } from "#/lib/auth-client";
 import { authErrorMessage } from "#/lib/auth-errors";
 import { cx } from "#/lib/cx";
+import { toast } from "#/lib/toast";
 import { firstLetter } from "#/lib/user";
 
 interface AccountPageProps {
@@ -17,7 +18,6 @@ interface AccountPageProps {
 export function AccountPage({ session }: AccountPageProps) {
 	const router = useRouter();
 	const [isSigningOut, setIsSigningOut] = useState(false);
-	const [signOutError, setSignOutError] = useState<string | null>(null);
 	const { user } = session;
 
 	const details = [
@@ -29,21 +29,25 @@ export function AccountPage({ session }: AccountPageProps) {
 
 	async function handleSignOut() {
 		setIsSigningOut(true);
-		setSignOutError(null);
 
 		try {
 			const { error } = await authClient.signOut();
 			if (error) {
-				setSignOutError(authErrorMessage(error, "You could not be signed out. Try again."));
+				toast.error("Sign out failed", {
+					description: authErrorMessage(error, "You could not be signed out. Try again."),
+				});
 				setIsSigningOut(false);
 				return;
 			}
 		} catch {
-			setSignOutError("The sign-out service could not be reached. Try again.");
+			toast.error("Sign out failed", {
+				description: "The sign-out service could not be reached. Try again.",
+			});
 			setIsSigningOut(false);
 			return;
 		}
 
+		toast.success("Signed out", { description: "See you next time." });
 		await router.navigate({ to: "/" });
 		await router.invalidate();
 	}
@@ -106,11 +110,6 @@ export function AccountPage({ session }: AccountPageProps) {
 						)}>
 						{isSigningOut ? "Signing out…" : "Sign out"}
 					</Button>
-					{signOutError ? (
-						<p role="alert" className="text-error text-sm">
-							{signOutError}
-						</p>
-					) : null}
 				</div>
 			</section>
 
